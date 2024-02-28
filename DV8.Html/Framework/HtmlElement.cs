@@ -1,28 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
 using DV8.Html.Elements;
 using DV8.Html.Serialization;
+using JetBrains.Annotations;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable MemberCanBeProtected.Global
-// ReSharper disable UnusedMember.Global
-
-// ReSharper disable CollectionNeverUpdated.Global
-
-// ReSharper disable ArrangeRedundantParentheses
 
 namespace DV8.Html.Framework;
 
-[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 public class HtmlElement : IHtmlElement
 {
     /// <summary>
-    /// Indicates whether this element is self-closing and should not have a closing element (like input, hr etc)
+    /// Indicates whether this element is self-closing and should not have a closing element (like input, hr etc.)
     /// or whether it should have a closing element (like `div`)
     /// </summary>
     protected virtual bool IsSelfClosing => false;
@@ -185,6 +176,7 @@ public class HtmlElement : IHtmlElement
         => GetType().Name.ToLower();
 
     public IHtmlElement[] ToArray() => new IHtmlElement[] { this };
+    [UsedImplicitly]
     public List<IHtmlElement> ToList() => new() { this };
 
     public virtual void WriteHtml(HtmlWriter writer, string prefix = "")
@@ -239,14 +231,14 @@ public class HtmlElement : IHtmlElement
 
     private void WriteAttributes(HtmlWriter writer)
     {
-        foreach (var (key, value) in ExtractAttributes().ToImmutableSortedDictionary())
-            writer.WriteAttributeString(key, value);
+        foreach (var kv in ExtractAttributes().OrderBy(_=>_.Key))
+            writer.WriteAttributeString(kv.Key, kv.Value);
     }
 
     private void WriteAttributes(XmlWriter writer)
     {
-        foreach (var (key, value) in ExtractAttributes())
-            writer.WriteAttributeString(key, value);
+        foreach (var kv in ExtractAttributes())
+            writer.WriteAttributeString(kv.Key, kv.Value);
     }
 
     protected Dictionary<string, string> ExtractAttributes()
@@ -262,20 +254,22 @@ public class HtmlElement : IHtmlElement
         //     dict.Add(attrName, val.ToString()!);
         // }
 
-        foreach (var (key, value) in Attributes)
+        foreach (var kv in Attributes)
         {
-            dict.Add(key, value);
+            dict.Add(kv.Key, kv.Value);
         }
 
         return dict;
     }
 
+    [UsedImplicitly]
     public bool AttributeHasValue(PropertyInfo pi)
     {
         var value = pi.GetValue(this);
         return value != null && (pi.PropertyType != typeof(bool) || (bool)value);
     }
 
+    [UsedImplicitly]
     public IEnumerable<PropertyInfo> DefinedAttributes() =>
         GetType().GetProperties();
 

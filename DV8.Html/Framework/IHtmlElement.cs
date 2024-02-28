@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 using DV8.Html.Serialization;
+using JetBrains.Annotations;
 
-// ReSharper disable UnusedMemberInSuper.Global
-// ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 namespace DV8.Html.Framework;
 
@@ -17,7 +16,7 @@ public interface IHtmlElement : IHtmlSerializable
 
     string? Title { get; set; }
 
-    string? Style { get; set; }
+    [UsedImplicitly] string? Style { get; set; }
 
     string? Tag { get; }
 
@@ -25,6 +24,7 @@ public interface IHtmlElement : IHtmlSerializable
 
 
     public string ToHtml();
+    [UsedImplicitly]
     public string ToXml();
 
     // ReSharper disable once FieldCanBeMadeReadOnly.Global
@@ -41,22 +41,25 @@ public interface IHtmlElement : IHtmlSerializable
     /// <summary>
     /// Element properties. Not included in HTML. Use this for whatever you want.  
     /// </summary>
+    [UsedImplicitly]
     public IDictionary<string, object> Properties { get; }
 
 
     /// <returns>self</returns>
-    public IHtmlElement Add(params IHtmlElement[] children)
-    {
-        Children.AddRange(children);
-        return this;
-    }
+    [UsedImplicitly]
+    public IHtmlElement Add(params IHtmlElement[] children);
+    //{
+    //    Children.AddRange(children);
+    //    return this;
+    //}
 
     /// <returns>self</returns>
-    public IHtmlElement Add(IEnumerable<IHtmlElement> children)
-    {
-        Children.AddRange(children);
-        return this;
-    }
+    [UsedImplicitly]
+    public IHtmlElement Add(IEnumerable<IHtmlElement> children);
+    //{
+    //    Children.AddRange(children);
+    //    return this;
+    //}
 
     void WriteXml(XmlWriter writer);
     void WriteHtml(HtmlWriter writer, string prefix = "");

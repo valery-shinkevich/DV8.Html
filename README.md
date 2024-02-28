@@ -25,7 +25,7 @@ See the test classes for more info.
 Requirements/Installation/Usage
 ------------------
 
-Requirements: .Net Core 6.0 or later.
+Requirements: .Net Standard 2.0 or later.
 
 Dependencies: None.
 
